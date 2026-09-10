@@ -1,7 +1,7 @@
 {
-  "name": "PPT Pest OS \u2014 Owner Preview",
+  "name": "PPT Pest OS \u2014 Owner Preview v1.1.1",
   "short_name": "PPT Pest Preview",
-  "start_url": "./?demo=1&preview=1&view=presentation&role=office&date=2026-09-09",
+  "start_url": "./?demo=1&preview=1&view=presentation&role=office&date=2026-09-09&mobilefix=2",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
