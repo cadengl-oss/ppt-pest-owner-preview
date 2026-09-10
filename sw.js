@@ -1,5 +1,5 @@
-const BUILD='20260910-mobile1';
-const CACHE='ppt-pest-os-v1.1.1-mobile1';
+const BUILD='20260910-mobile2';
+const CACHE='ppt-pest-os-v1.1.1-mobile2';
 const SHELL=['./','./index.html',`./styles.css?v=${BUILD}`,`./dist/app.js?v=${BUILD}`,`./manifest.webmanifest?v=${BUILD}`,'./icon-192.png','./icon-512.png','./apple-touch-icon.png'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(Promise.all([

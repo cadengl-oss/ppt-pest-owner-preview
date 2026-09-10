@@ -9,7 +9,7 @@ const truckForRole = (role) => role === 'office' ? null : Number(role.replace('t
 const money = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n || 0);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
 function changeStatusLabel(label) { return previewMode ? 'Saved in owner preview' : label; }
-const APP_BUILD = '20260910-mobile1';
+const APP_BUILD = '20260910-mobile2';
 async function cleanupPreviewServiceWorkers() {
     if (!previewMode)
         return false;
@@ -490,6 +490,6 @@ catch { } if (state.token && navigator.onLine) {
         }
         state.syncLabel = 'Session expired · sign in';
     }
-} if ('serviceWorker' in navigator && location.protocol.startsWith('http'))
+} if (!previewMode && 'serviceWorker' in navigator && location.protocol.startsWith('http'))
     navigator.serviceWorker.register(`./sw.js?v=${APP_BUILD}`).then(r => r.update()).catch(() => { }); window.addEventListener('online', () => { state.syncLabel = state.token ? 'Online — ready to sync' : (demoMode ? 'Demo / Local' : 'Sign in required'); render(); }); window.addEventListener('offline', () => { state.syncLabel = 'Offline — local data active'; render(); }); render(); }
 init();
