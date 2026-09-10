@@ -9,13 +9,13 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="PPT Pest OS" />
   <title>PPT Pest OS</title>
-  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="manifest" href="manifest.webmanifest?v=20260910-mobile1" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=20260910-mobile1" />
 </head>
 <body>
-  <div id="app" aria-live="polite"></div>
-  <script>if(!new URLSearchParams(location.search).has('demo')) location.replace('./?demo=1&preview=1&view=presentation&role=office&date=2026-09-09');</script>
-  <script defer src="dist/app.js"></script>
+  <div id="app" aria-live="polite"><section id="boot-status" style="max-width:520px;margin:18vh auto;padding:24px;font-family:Arial,sans-serif;text-align:center;border:2px solid #000"><b style="font-size:24px">PPT PEST</b><p>Loading the latest app…</p><button type="button" onclick="const u=new URL(location.href);u.searchParams.set('refresh','20260910-mobile1');location.replace(u.toString())" style="padding:10px 16px;background:#000;color:#fff;border:0;border-radius:5px;font-weight:700">Refresh Preview</button></section></div>
+  <script>if(!new URLSearchParams(location.search).has('demo')) location.replace('./?demo=1&preview=1&view=presentation&role=office&date=2026-09-09&mobilefix=1');</script>
+  <script defer src="dist/app.js?v=20260910-mobile1"></script>
 </body>
 </html>

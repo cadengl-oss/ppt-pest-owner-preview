@@ -9,6 +9,30 @@ const truckForRole = (role) => role === 'office' ? null : Number(role.replace('t
 const money = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n || 0);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
 function changeStatusLabel(label) { return previewMode ? 'Saved in owner preview' : label; }
+const APP_BUILD = '20260910-mobile1';
+async function cleanupPreviewServiceWorkers() {
+    if (!previewMode)
+        return false;
+    try {
+        const hadController = 'serviceWorker' in navigator && !!navigator.serviceWorker.controller;
+        if ('serviceWorker' in navigator) {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(regs.map(r => r.unregister()));
+        }
+        if ('caches' in window) {
+            const keys = await caches.keys();
+            await Promise.all(keys.filter(k => k.startsWith('ppt-pest-os-')).map(k => caches.delete(k)));
+        }
+        if (hadController && bootQuery.get('fresh') !== APP_BUILD) {
+            const u = new URL(location.href);
+            u.searchParams.set('fresh', APP_BUILD);
+            location.replace(u.toString());
+            return true;
+        }
+    }
+    catch { }
+    return false;
+}
 const id = () => crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now();
 const seedJobs = [
     { id: 'job-truck-1', customer_name: 'Canyon Oaks HOA', property_address: 'Chino Hills, CA', scheduled_date: today, start_time: '08:00', end_time: '09:00', truck_id: 1, technician: 'Marco / Truck 1', status: 'scheduled', service_type: 'Rodent Inspection', pest_types: ['Rodents'], scope: 'Inspect clubhouse, receiving area and dumpster perimeter.', internal_notes: 'Gate code confirmed with office.', customer_notes: '', treatment_details: '', materials: 'Monitoring devices', areas_treated: 'Clubhouse perimeter', completion_notes: '', signature_name: '', signature_data: '', completed_at: '', follow_up_required: false, follow_up_date: '', billing_status: 'ready_to_bill', invoice_number: '', amount: 285, billing_notes: '', revision: 1 },
@@ -428,7 +452,8 @@ catch {
     state.syncLabel = 'Needs attention';
 } render(); }
 function exportBackup() { const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), jobs: state.jobs, customers: state.customers, notes: state.dailyNotes, weekly_notes: state.weeklyNotes, monthly_notes: state.monthlyNotes }, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'PPT_Pest_OS_Backup.json'; a.click(); URL.revokeObjectURL(a.href); }
-async function init() { const q = new URLSearchParams(location.search); state.focusDate = q.get('date') || today; const qv = q.get('view'); if (qv)
+async function init() { if (await cleanupPreviewServiceWorkers())
+    return; const q = new URLSearchParams(location.search); state.focusDate = q.get('date') || today; const qv = q.get('view'); if (qv)
     state.view = qv; const qr = q.get('role'); state.role = demoMode && qr && roleLabels[qr] ? qr : (localStorage.getItem('ppt-role') || 'office'); const qm = q.get('mode'); if (qm && ['day', 'week', 'month'].includes(qm))
     state.scheduleMode = qm; state.token = localStorage.getItem('ppt-token') || ''; try {
     const jobs = await kvGet('jobs');
@@ -466,5 +491,5 @@ catch { } if (state.token && navigator.onLine) {
         state.syncLabel = 'Session expired · sign in';
     }
 } if ('serviceWorker' in navigator && location.protocol.startsWith('http'))
-    navigator.serviceWorker.register('./sw.js').catch(() => { }); window.addEventListener('online', () => { state.syncLabel = state.token ? 'Online — ready to sync' : (demoMode ? 'Demo / Local' : 'Sign in required'); render(); }); window.addEventListener('offline', () => { state.syncLabel = 'Offline — local data active'; render(); }); render(); }
+    navigator.serviceWorker.register(`./sw.js?v=${APP_BUILD}`).then(r => r.update()).catch(() => { }); window.addEventListener('online', () => { state.syncLabel = state.token ? 'Online — ready to sync' : (demoMode ? 'Demo / Local' : 'Sign in required'); render(); }); window.addEventListener('offline', () => { state.syncLabel = 'Offline — local data active'; render(); }); render(); }
 init();
