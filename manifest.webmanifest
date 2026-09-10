@@ -1,0 +1,23 @@
+{
+  "name": "PPT Pest OS \u2014 Owner Preview",
+  "short_name": "PPT Pest Preview",
+  "start_url": "./?demo=1&preview=1&view=presentation&role=office&date=2026-09-09",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "description": "Sample-data owner preview of the open-source PPT Pest three-truck operating system.",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
